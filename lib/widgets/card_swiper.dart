@@ -1,8 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:peliculas/models/models.dart';
 
 // Se usa Widgets separados por carpetas para que sea más organizado
 class CardSwiper extends StatelessWidget {
+  final List<Movie> movies;
+
+  const CardSwiper({Key? key, required this.movies}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -13,13 +18,14 @@ class CardSwiper extends StatelessWidget {
       padding: EdgeInsets.only(top: 20),
       // Clase importada para hacer los Swipper
       child: Swiper(
-        itemCount: 10,
+        itemCount: movies.length,
         layout: SwiperLayout.STACK,
         itemWidth: size.width * 0.7,
         itemHeight: size.height * 0.5,
         // (_) => Se pone así para dar a enteder que se usa el context
         itemBuilder: (_, int index) {
           // GestureDetector: Para ejecutar el cambio de página
+          final movie = movies[index];
           return GestureDetector(
             onTap: () => Navigator.pushNamed(context, 'details',
                 arguments: 'movie-instance'),
@@ -28,7 +34,7 @@ class CardSwiper extends StatelessWidget {
               child: FadeInImage(
                   fit: BoxFit.cover,
                   placeholder: AssetImage('assets/no-image.jpg'),
-                  image: NetworkImage('https://via.placeholder.com/300x400')),
+                  image: NetworkImage(movie.fullPosterImage)),
             ),
           );
         },
