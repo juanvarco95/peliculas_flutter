@@ -9,14 +9,14 @@ import 'package:peliculas/models/models.dart';
 class NowPlayingResponse {
   // Constructor de NowPlayingResponse
   NowPlayingResponse({
-    required this.dates,
+    // required this.dates,
     required this.page,
     required this.results,
     required this.totalPages,
     required this.totalResults,
   });
 
-  Dates dates;
+  // Dates dates;
   int page;
   List<Movie> results;
   int totalPages;
@@ -28,7 +28,7 @@ class NowPlayingResponse {
   // Organiza el Json dependiendo de los valores
   factory NowPlayingResponse.fromMap(Map<String, dynamic> json) =>
       NowPlayingResponse(
-        dates: Dates.fromMap(json["dates"]),
+        // dates: Dates.fromMap(json["dates"]),
         page: json["page"],
         results: List<Movie>.from(json["results"].map((x) => Movie.fromMap(x))),
         totalPages: json["total_pages"],

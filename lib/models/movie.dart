@@ -39,8 +39,16 @@ class Movie {
   get fullPosterImage {
     if (this.posterPath != null)
       return 'https://image.tmdb.org/t/p/w500/${this.posterPath}';
-    return 'https://i.stack.imgur.com/GNhxO.png';
+    return 'https://lh3.googleusercontent.com/proxy/rmBPufl1X1xqBjie5P8erGIKEJawivYC2KCzrc5iRIs3LChzL6y4EuinCXs2zdtJvCRdHLgydhKIG1ctcpVjrIB6ZQ';
   }
+
+  get fullBackDropPath {
+    if (this.backdropPath != null)
+      return 'https://image.tmdb.org/t/p/w500/${this.backdropPath}';
+    return 'https://lh3.googleusercontent.com/proxy/rmBPufl1X1xqBjie5P8erGIKEJawivYC2KCzrc5iRIs3LChzL6y4EuinCXs2zdtJvCRdHLgydhKIG1ctcpVjrIB6ZQ';
+  }
+
+  get titleMovie => this.title;
 
   // Mapeado
   factory Movie.fromMap(Map<String, dynamic> json) => Movie(
