@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:peliculas/helpers/debouncer.dart';
 import 'package:peliculas/models/models.dart';
+import 'package:peliculas/models/search_response.dart';
 
 // Api: 588d0d91aa5aa8d10b77025c2fa62266
 class MoviesProvider extends ChangeNotifier {
   // Para hacer uso de la api: https://developers.themoviedb.org/3/movies/get-now-playing
   String _apiKey = '588d0d91aa5aa8d10b77025c2fa62266';
   String _baseUrl = 'api.themoviedb.org';
-  String _language = 'es-ES';
+  String _language = 'es-MX';
 
   List<Movie> onDisplayMovies = [];
   List<Movie> onDisplayPopularMovies = [];
@@ -15,6 +18,16 @@ class MoviesProvider extends ChangeNotifier {
   Map<int, List<Cast>> movieCast = {};
 
   int _popularInt = 0;
+
+  // final debouncer = Debouncer(Duration(milliseconds: 300));
+  final debouncer = Debouncer(duration: Duration(milliseconds: 500));
+
+  // ignore: close_sinks
+  final StreamController<List<Movie>> _suggestionStreamController =
+      StreamController.broadcast();
+
+  Stream<List<Movie>> get suggestionStream =>
+      this._suggestionStreamController.stream;
 
   // Constructor
   MoviesProvider() {
@@ -26,7 +39,7 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   Future<String> _getJsonData(String endpoint, [int page = 1]) async {
-    var url = Uri.https(_baseUrl, endpoint, {
+    final url = Uri.https(_baseUrl, endpoint, {
       'api_key': _apiKey,
       'language': _language,
       'page': '$page',
@@ -57,8 +70,8 @@ class MoviesProvider extends ChangeNotifier {
 
   getOnDisplayPopularMovies() async {
     _popularInt++;
-    final jsonData = await _getJsonData('3/movie/popular', _popularInt);
 
+    final jsonData = await _getJsonData('3/movie/popular', _popularInt);
     final popularPlayingResponse = Popular.fromJson(jsonData);
     // Para hacer el infinite scroll
     onDisplayPopularMovies = [
@@ -80,5 +93,32 @@ class MoviesProvider extends ChangeNotifier {
     movieCast[movieId] = creditsResponsive.cast;
 
     return creditsResponsive.cast;
+  }
+
+  Future<List<Movie>> searchMovies(String query) async {
+    final url = Uri.https(_baseUrl, '3/search/movie', {
+      'api_key': _apiKey,
+      'language': _language,
+      'query': query,
+    });
+
+    final response = await http.get(url);
+    final searchResponse = SearchResponse.fromJson(response.body);
+
+    return searchResponse.results;
+  }
+
+  void getSuggestionsByQuery(String searchTerm) {
+    debouncer.value = '';
+    debouncer.onValue = (value) async {
+      final results = await this.searchMovies(value);
+      this._suggestionStreamController.add(results);
+    };
+
+    final timer = Timer.periodic(Duration(milliseconds: 300), (_) {
+      debouncer.value = searchTerm;
+    });
+
+    Future.delayed(Duration(milliseconds: 301)).then((_) => timer.cancel());
   }
 }

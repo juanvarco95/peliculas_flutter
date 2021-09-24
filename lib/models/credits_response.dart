@@ -63,7 +63,7 @@ class Cast {
   get fullProfilePath {
     if (this.profilePath != null)
       return 'https://image.tmdb.org/t/p/w500/${this.profilePath}';
-    return 'https://lh3.googleusercontent.com/proxy/rmBPufl1X1xqBjie5P8erGIKEJawivYC2KCzrc5iRIs3LChzL6y4EuinCXs2zdtJvCRdHLgydhKIG1ctcpVjrIB6ZQ';
+    return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
   }
 
   factory Cast.fromMap(Map<String, dynamic> json) => Cast(

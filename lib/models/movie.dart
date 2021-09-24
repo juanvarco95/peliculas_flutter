@@ -16,6 +16,7 @@ class Movie {
     required this.video,
     required this.voteAverage,
     required this.voteCount,
+    this.heroId,
   });
 
   bool adult;
@@ -33,19 +34,21 @@ class Movie {
   double voteAverage;
   int voteCount;
 
+  String? heroId;
+
   // Decodificado
   factory Movie.fromJson(String str) => Movie.fromMap(json.decode(str));
 
   get fullPosterImage {
     if (this.posterPath != null)
       return 'https://image.tmdb.org/t/p/w500/${this.posterPath}';
-    return 'https://lh3.googleusercontent.com/proxy/rmBPufl1X1xqBjie5P8erGIKEJawivYC2KCzrc5iRIs3LChzL6y4EuinCXs2zdtJvCRdHLgydhKIG1ctcpVjrIB6ZQ';
+    return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
   }
 
   get fullBackDropPath {
     if (this.backdropPath != null)
       return 'https://image.tmdb.org/t/p/w500/${this.backdropPath}';
-    return 'https://lh3.googleusercontent.com/proxy/rmBPufl1X1xqBjie5P8erGIKEJawivYC2KCzrc5iRIs3LChzL6y4EuinCXs2zdtJvCRdHLgydhKIG1ctcpVjrIB6ZQ';
+    return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
   }
 
   get titleMovie => this.title;
